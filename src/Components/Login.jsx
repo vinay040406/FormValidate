@@ -13,10 +13,6 @@ const Login = () => {
     (u) => u.email === formData.email && u.password === formData.password,
   );
 
-  let mappedData = data.map((d) => {
-    return d;
-  });
-
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState(false);
 
