@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+svg {
+  cursor: pointer;
+}
+.profileForm label {
+  font-size: 20px;
+  font-weight: 700;
+}
+.profileForm input {
+  font-size: 18px;
+  color: rgba(133, 133, 133, 1);
+}
+button {
+  cursor: pointer;
+}
