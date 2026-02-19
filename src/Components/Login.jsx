@@ -7,6 +7,7 @@ const Login = () => {
     email: "",
     password: "",
   });
+  const [login, setLogin] = useState(false);
 
   const data = JSON.parse(localStorage.getItem("Users"));
   const user = data?.find(
@@ -22,8 +23,10 @@ const Login = () => {
     if (!user) {
       return;
     }
+    setLogin(true);
     setTimeout(() => {
       navigate("/profile");
+      setLogin(false);
     }, 2000);
     setErrors(false);
   };
@@ -99,7 +102,7 @@ const Login = () => {
                 type="submit"
                 className={`w-full bg-black cursor-pointer text-white font-semibold py-3 rounded-xl hover:bg-gray-800  ease-in duration-300 hover:scale-101`}
               >
-                Login
+                {login ? "Loggin In ..." : "Log In"}
               </button>
             </form>
 

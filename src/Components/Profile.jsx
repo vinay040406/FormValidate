@@ -18,7 +18,7 @@ const Profile = () => {
   const handleLogOut = () => {
     setTimeout(() => {
       localStorage.removeItem("Users");
-      navigate("/register");
+      navigate("/");
     }, 1000);
   };
 

@@ -149,7 +149,7 @@ const Register = () => {
             {formData.confirmPassword === "" && errors && (
               <p className="text-red-500 text-sm mt-1">This is required</p>
             )}
-            {formData.password !== formData.confirmPassword && (
+            {formData.password !== formData.confirmPassword && errors &&(
               <p className="text-red-500 text-sm mt-1">Password Mismatches</p>
             )}
           </div>
