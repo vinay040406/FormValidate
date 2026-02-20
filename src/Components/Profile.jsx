@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { setItem } from "./Register";
+// import { setItem } from "./Register";
 
 const Profile = () => {
+  const inputRef = useRef();
   const navigate = useNavigate();
   const logBtnRef = useRef();
   const [profileDetails, setProfileDetails] = useState({
@@ -37,8 +38,12 @@ const Profile = () => {
   }, []);
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log(profileDetails);
   };
 
+  const handleInputRef = () => {
+    inputRef.current.readOnly = false;
+  };
   return (
     <div className="h-screen w-screen bg-linear-to-br  flex items-center justify-center">
       {data ? (
@@ -170,6 +175,7 @@ const Profile = () => {
             </div>
             <div className="flex gap-5 mt-23 items-center justify-center">
               <svg
+                onClick={handleInputRef}
                 width="45"
                 height="45"
                 viewBox="0 0 45 45"
@@ -207,63 +213,88 @@ const Profile = () => {
               className="flex profileForm flex-col space-y-2 mt-10 w-full "
             >
               <div className="flex justify-between w-full">
-                <div className="flex flex-col gap-2 w-75">
-                  <label>First Name</label>
-                  <input
-                    readOnly
-                    onChange={() => {}}
-                    type="text"
-                    value={profileDetails.username}
-                    className="border-2 border-[rgba(133,133,133,1)] rounded-xl p-3 focus:outline-black"
-                  />
+                <div className="flex  w-75">
+                  <label className="flex flex-col gap-2 w-full">
+                    First Name
+                    <input
+                      ref={inputRef}
+                      autoComplete="false"
+                      name="username"
+                      readOnly
+                      onChange={(e) => {
+                        setProfileDetails({
+                          ...profileDetails,
+                          username: e.target.value,
+                        });
+                      }}
+                      type="text"
+                      value={profileDetails.username}
+                      className="border-2 border-[rgba(133,133,133,1)] rounded-xl p-3 focus:outline-black"
+                    />
+                  </label>
                 </div>
-                <div className="flex flex-col gap-2 w-75">
-                  <label>Last Name</label>
+                <div className="flex  w-75">
+                  <label className="flex flex-col gap-2 w-full">
+                    Last Name
+                    <input
+                      name="lastname"
+                      readOnly
+                      type="text"
+                      onChange={() => {}}
+                      value={profileDetails.lastname}
+                      className=" border-2 border-[rgba(133,133,133,1)] rounded-xl p-3 focus:outline-black"
+                    />
+                  </label>
+                </div>
+              </div>
+              <div className="flex w-full">
+                <label className="flex flex-col w-full">
+                  Email
                   <input
+                    name="email"
+                    autoComplete="false"
                     readOnly
                     type="text"
                     onChange={() => {}}
-                    value={profileDetails.lastname}
+                    value={profileDetails.email}
+                    className=" border-2 border-[rgba(133,133,133,1)] rounded-xl p-3 w-full focus:outline-black"
+                  />
+                </label>
+              </div>
+              <div className="flex flex-col">
+                <label className="flex flex-col w-full">
+                  Password
+                  <input
+                    name="password"
+                    readOnly
+                    type="text"
+                    onChange={() => {}}
+                    value={profileDetails.password}
                     className=" border-2 border-[rgba(133,133,133,1)] rounded-xl p-3 focus:outline-black"
                   />
-                </div>
+                </label>
               </div>
               <div className="flex flex-col">
-                <label>Email</label>
-                <input
-                  readOnly
-                  type="text"
-                  onChange={() => {}}
-                  value={profileDetails.email}
-                  className=" border-2 border-[rgba(133,133,133,1)] rounded-xl p-3 focus:outline-black"
-                />
+                <label className="flex flex-col">
+                  Confirm Password
+                  <input
+                    name="confirmPassword"
+                    readOnly
+                    type="text"
+                    onChange={() => {}}
+                    value={profileDetails.confirmPassword}
+                    className=" border-2 border-[rgba(133,133,133,1)] rounded-xl p-3 focus:outline-black"
+                  />
+                </label>
               </div>
               <div className="flex flex-col">
-                <label>Password</label>
-                <input
-                  readOnly
-                  type="text"
-                  onChange={() => {}}
-                  value={profileDetails.password}
-                  className=" border-2 border-[rgba(133,133,133,1)] rounded-xl p-3 focus:outline-black"
-                />
-              </div>
-              <div className="flex flex-col">
-                <label>Confirm Password</label>
-                <input
-                  readOnly
-                  type="text"
-                  onChange={() => {}}
-                  value={profileDetails.confirmPassword}
-                  className=" border-2 border-[rgba(133,133,133,1)] rounded-xl p-3 focus:outline-black"
-                />
-              </div>
-              <div className="flex flex-col">
-                <label>Change Profile Picture</label>
-                <input
-                  type="file"
-                  className=" border-2 border-[rgba(133,133,133,1)] rounded-xl p-3 focus:outline-black"
-                />
+                <label className="flex flex-col">
+                  Change Profile Picture
+                  <input
+                    type="file"
+                    className=" border-2 border-[rgba(133,133,133,1)] rounded-xl p-3 focus:outline-black"
+                  />
+                </label>
               </div>
               <div className="mt-30 flex gap-5">
                 <button className="px-10 py-3 border-[rgba(17,45,73,1)] border cursor-pointer rounded-xl">

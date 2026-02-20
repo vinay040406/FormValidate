@@ -18,7 +18,8 @@ const Register = () => {
 
   const existingUsers = JSON.parse(localStorage.getItem("Users")) || [];
 
-  const map = existingUsers.filter((data) => data.email !== formData.email);
+  const map = existingUsers.map((data) => data.email);
+  const filteredEmails = map.includes(formData.email);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -38,14 +39,8 @@ const Register = () => {
       return;
     }
 
-    for (const element of map) {
-      if (element === formData.email) {
-        alert("email already exists");
-        setErrors(true);
-        return;
-      } else {
-        setErrors(false);
-      }
+    if (filteredEmails) {
+      return;
     }
     setRegister(true);
 
@@ -64,8 +59,6 @@ const Register = () => {
 
       setErrors(false);
       setRegister(false);
-
-      e.target.reset();
       navigate("/login");
     }, 2000);
   };
@@ -84,6 +77,8 @@ const Register = () => {
           </p>
           <div className="mb-4">
             <input
+              autoComplete="false"
+              name="username"
               type="text"
               placeholder="Firstname"
               value={formData.username}
@@ -98,6 +93,7 @@ const Register = () => {
           </div>
           <div className="mb-4">
             <input
+              name="lastname"
               type="text"
               placeholder="Lastname"
               value={formData.lastname}
@@ -112,6 +108,8 @@ const Register = () => {
           </div>
           <div className="mb-4">
             <input
+              name="email"
+              autoComplete="false"
               type="email"
               placeholder="Email"
               value={formData.email}
@@ -120,15 +118,18 @@ const Register = () => {
               }
               className="w-full py-3 px-8 bg-[rgba(244,248,247,1)] rounded-4xl focus:outline-black"
             />
-            {formData.email === "" && errors && (
+            {(formData.email === "" && errors && (
               <p className="text-red-500 text-sm mt-1">This is required</p>
-            )}
-            {map && errors && (
-              <p className="text-red-500 text-sm mt-1">Email already exists</p>
-            )}
+            )) ||
+              (errors && filteredEmails && (
+                <p className="text-sm mt-1 text-red-500">
+                  Email already exists
+                </p>
+              ))}
           </div>
           <div className="mb-4 relative">
             <input
+              name="password"
               type={show ? "text" : "password"}
               autoComplete="false"
               placeholder="Password"
@@ -152,6 +153,7 @@ const Register = () => {
           </div>
           <div className="mb-6">
             <input
+              name="confirmPassword"
               type={show ? "text" : "password"}
               autoComplete="false"
               placeholder="Confirm Password"
@@ -164,23 +166,22 @@ const Register = () => {
               }
               className="w-full py-3 px-8 bg-[rgba(244,248,247,1)] rounded-4xl focus:outline-black"
             />
-            {formData.confirmPassword === "" && errors && (
+            {(formData.confirmPassword === "" && errors && (
               <p className="text-red-500 text-sm mt-1">This is required</p>
-            )}
-            {formData.password !== formData.confirmPassword &&
-              errors &&
-              !formData.password == "" && (
-                <p className="text-red-500 text-sm mt-1">Password Mismatches</p>
-              )}
+            )) ||
+              (formData.password !== formData.confirmPassword && errors && (
+                <p className="text-sm text-red-500 mt-1">Password Mismatch</p>
+              ))}
           </div>
           <div className="mb-3 flex flex-col gap-3">
             <input
               type="file"
               // onChange={(e) => {
               //   const files = e.target.files[0];
+              //   if (!files) return;
               //   const Image = URL.createObjectURL(files);
-              //   setFormData(() => ({
-              //     ...formData,
+              //   setFormData((prev) => ({
+              //     ...prev,
               //     profilePicture: Image,
               //   }));
               // }}
@@ -230,11 +231,3 @@ const Register = () => {
 };
 
 export default Register;
-
-export const getItem = () => {
-  JSON.parse(localStorage.getItem("Users"));
-};
-
-export const setItem = (val) => {
-  localStorage.setItem("Users", JSON.stringify(val));
-};

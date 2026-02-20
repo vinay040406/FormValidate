@@ -7,14 +7,13 @@ const Login = () => {
     email: "",
     password: "",
   });
+
   const [login, setLogin] = useState(false);
 
   const data = JSON.parse(localStorage.getItem("Users"));
   const user = data?.find(
     (u) => u.email === formData.email && u.password === formData.password,
   );
-
-
 
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState(false);
@@ -49,7 +48,9 @@ const Login = () => {
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <input
+                  name="email"
                   type="email"
+                  autoComplete="false"
                   placeholder="Email address"
                   value={formData.email}
                   onChange={(e) =>
@@ -74,6 +75,7 @@ const Login = () => {
                   type={showPassword ? "text" : "password"}
                   placeholder="Password"
                   value={formData.password}
+                  name="password"
                   onChange={(e) =>
                     setFormData({ ...formData, password: e.target.value })
                   }

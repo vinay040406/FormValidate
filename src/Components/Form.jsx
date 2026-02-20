@@ -80,7 +80,11 @@ const Form = () => {
                         className="w-100 border-2 rounded-lg p-3"
                         key={index}
                       >
-                        <img className="h-20 w-20 rounded-full mb-2 object-cover" src={data.profilePicture} alt="" />
+                        <img
+                          className="h-20 w-20 rounded-full mb-2 object-cover"
+                          src={data.profilePicture}
+                          alt=""
+                        />
                         <p className="text-2xl font-semibold w-20 ">
                           ID : {index + 1}
                         </p>
@@ -141,7 +145,7 @@ const Form = () => {
                 }));
               }}
               type="text"
-              className={`py-2 ${errors && userDetails.username === "" ? "border border-red-500" : "border"}`}
+              className={`py-2 px-4 ${errors && userDetails.username === "" ? "border border-red-500" : "border"}`}
             />
             {errors && userDetails.username === "" ? (
               <p className="text-red-500">This is required</p>
@@ -159,7 +163,7 @@ const Form = () => {
                 }));
               }}
               type="text"
-              className={`py-2 ${errors && userDetails.lastname === "" ? "border border-red-500" : "border"}`}
+              className={`py-2  px-4 ${errors && userDetails.lastname === "" ? "border border-red-500" : "border"}`}
             />
             {errors && userDetails.lastname === "" ? (
               <p className="text-red-500">This is required</p>
@@ -177,7 +181,7 @@ const Form = () => {
                 }));
               }}
               type="text"
-              className={`py-2 ${errors && userDetails.email === "" ? "border border-red-500" : "border"}`}
+              className={`py-2 px-4 ${errors && userDetails.email === "" ? "border border-red-500" : "border"}`}
             />
             {errors && userDetails.email === "" ? (
               <p className="text-red-500">This is required</p>
@@ -202,7 +206,7 @@ const Form = () => {
                   paddingRight: "60px",
                 }}
                 type={show ? "text" : "password"}
-                className={`py-2 w-full  ${errors && userDetails.password === "" ? "border border-red-500 " : "border"}`}
+                className={`py-2  px-4 w-full  ${errors && userDetails.password === "" ? "border border-red-500 " : "border"}`}
               />
               <p
                 className="absolute top-2 cursor-pointer right-3.5"
@@ -223,7 +227,7 @@ const Form = () => {
               type={show ? "text" : "password"}
               placeholder="Confirm Your Password"
               value={userDetails.confirmPassword}
-              className={` py-2 ${errors && userDetails.confirmPassword === "" ? "border border-red-500" : "border"}`}
+              className={` py-2 px-4 ${errors && userDetails.confirmPassword === "" ? "border border-red-500" : "border"}`}
               onChange={(e) => {
                 setUserDetails((prev) => ({
                   ...prev,
@@ -247,7 +251,7 @@ const Form = () => {
               <input
                 type="file"
                 name="Select Image"
-                className="border py-2"
+                className="border py-2 px-4"
                 onChange={(e) => {
                   const file = e.target.files[0];
                   const image = URL.createObjectURL(file);
