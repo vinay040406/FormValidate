@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { setItem } from "./Register";
 
 const Profile = () => {
@@ -7,14 +7,16 @@ const Profile = () => {
   const logBtnRef = useRef();
   const [profileDetails, setProfileDetails] = useState({
     username: "",
-    profilePicture: "",
+    profilePicture: null,
     lastname: "",
     email: "",
     password: "",
     confirmPassword: "",
   });
-  const data = JSON.parse(localStorage.getItem("Users"));
 
+  const data = JSON.parse(localStorage.getItem("Users"));
+  const existingUsers = JSON.parse(localStorage.getItem("Users")) || [];
+  const lastOne = existingUsers[existingUsers.length - 1];
   const handleLogOut = () => {
     setTimeout(() => {
       localStorage.removeItem("Users");
@@ -25,12 +27,12 @@ const Profile = () => {
   useEffect(() => {
     if (!data) return;
     setProfileDetails(() => ({
-      username: data[0].username,
-      profilePicture: data[0].profilePicture,
-      lastname: data[0].lastname,
-      email: data[0].email,
-      password: data[0].password,
-      confirmPassword: data[0].confirmPassword,
+      username: lastOne.username,
+      profilePicture: lastOne.profilePicture,
+      lastname: lastOne.lastname,
+      email: lastOne.email,
+      password: lastOne.password,
+      confirmPassword: lastOne.confirmPassword,
     }));
   }, []);
   const handleSubmit = (e) => {
@@ -208,6 +210,7 @@ const Profile = () => {
                 <div className="flex flex-col gap-2 w-75">
                   <label>First Name</label>
                   <input
+                    readOnly
                     onChange={() => {}}
                     type="text"
                     value={profileDetails.username}
@@ -217,6 +220,7 @@ const Profile = () => {
                 <div className="flex flex-col gap-2 w-75">
                   <label>Last Name</label>
                   <input
+                    readOnly
                     type="text"
                     onChange={() => {}}
                     value={profileDetails.lastname}
@@ -227,6 +231,7 @@ const Profile = () => {
               <div className="flex flex-col">
                 <label>Email</label>
                 <input
+                  readOnly
                   type="text"
                   onChange={() => {}}
                   value={profileDetails.email}
@@ -236,6 +241,7 @@ const Profile = () => {
               <div className="flex flex-col">
                 <label>Password</label>
                 <input
+                  readOnly
                   type="text"
                   onChange={() => {}}
                   value={profileDetails.password}
@@ -245,6 +251,7 @@ const Profile = () => {
               <div className="flex flex-col">
                 <label>Confirm Password</label>
                 <input
+                  readOnly
                   type="text"
                   onChange={() => {}}
                   value={profileDetails.confirmPassword}
@@ -297,7 +304,12 @@ const Profile = () => {
           </div>
         </div>
       ) : (
-        <h1 className="text-6xl font-semibold">No results found</h1>
+        <h1 className="text-6xl font-semibold text-center">
+          No results found <br />
+          <Link to={"/"}>
+            <h2 className="text-2xl mt-4 underline ">Please Sign Up Here</h2>
+          </Link>
+        </h1>
       )}
     </div>
   );

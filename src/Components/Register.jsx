@@ -16,6 +16,10 @@ const Register = () => {
   const [show, setShow] = useState(false);
   const [register, setRegister] = useState(false);
 
+  const existingUsers = JSON.parse(localStorage.getItem("Users")) || [];
+
+  const map = existingUsers.filter((data) => data.email !== formData.email);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (
@@ -23,18 +27,29 @@ const Register = () => {
       !formData.lastname ||
       !formData.email ||
       !formData.password ||
-      !formData.confirmPassword
+      !formData.confirmPassword ||
+      !formData.profilePicture
     ) {
       setErrors(true);
       return;
     }
+
     if (formData.password !== formData.confirmPassword) {
       return;
+    }
+
+    for (const element of map) {
+      if (element === formData.email) {
+        alert("email already exists");
+        setErrors(true);
+        return;
+      } else {
+        setErrors(false);
+      }
     }
     setRegister(true);
 
     setTimeout(() => {
-      const existingUsers = JSON.parse(localStorage.getItem("Users")) || [];
       existingUsers.push(formData);
       localStorage.setItem("Users", JSON.stringify(existingUsers));
 
@@ -108,6 +123,9 @@ const Register = () => {
             {formData.email === "" && errors && (
               <p className="text-red-500 text-sm mt-1">This is required</p>
             )}
+            {map && errors && (
+              <p className="text-red-500 text-sm mt-1">Email already exists</p>
+            )}
           </div>
           <div className="mb-4 relative">
             <input
@@ -149,11 +167,13 @@ const Register = () => {
             {formData.confirmPassword === "" && errors && (
               <p className="text-red-500 text-sm mt-1">This is required</p>
             )}
-            {formData.password !== formData.confirmPassword && errors &&(
-              <p className="text-red-500 text-sm mt-1">Password Mismatches</p>
-            )}
+            {formData.password !== formData.confirmPassword &&
+              errors &&
+              !formData.password == "" && (
+                <p className="text-red-500 text-sm mt-1">Password Mismatches</p>
+              )}
           </div>
-          <div className="mb-3   flex flex-col gap-3">
+          <div className="mb-3 flex flex-col gap-3">
             <input
               type="file"
               // onChange={(e) => {
@@ -167,9 +187,7 @@ const Register = () => {
               onChange={(e) => {
                 const file = e.target.files[0];
                 if (!file) return;
-
                 const reader = new FileReader();
-
                 reader.onloadend = () => {
                   setFormData((prev) => ({
                     ...prev,

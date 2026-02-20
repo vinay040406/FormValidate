@@ -14,6 +14,8 @@ const Login = () => {
     (u) => u.email === formData.email && u.password === formData.password,
   );
 
+
+
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState(false);
 
@@ -102,7 +104,7 @@ const Login = () => {
                 type="submit"
                 className={`w-full bg-black cursor-pointer text-white font-semibold py-3 rounded-xl hover:bg-gray-800  ease-in duration-300 hover:scale-101`}
               >
-                {login ? "Loggin In ..." : "Log In"}
+                {login ? "Logging In ..." : "Log In"}
               </button>
             </form>
 
@@ -114,7 +116,7 @@ const Login = () => {
 
             <p className="text-center mt-6 text-lg ">
               Don't have an account?
-              <Link to="/register" className="underline font-semibold text-xl ">
+              <Link to="/" className="underline font-semibold text-xl ">
                 &nbsp; Create Account &nbsp;
               </Link>
             </p>
@@ -128,7 +130,7 @@ const Login = () => {
           <br />
           <h1 className="text-7xl font-medium mb-10">Please register first </h1>
 
-          <Link to={"/register"}>
+          <Link to={"/"}>
             {" "}
             <span className="underline text-xl font-bold">SignUp Here</span>
           </Link>
