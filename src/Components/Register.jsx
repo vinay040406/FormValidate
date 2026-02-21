@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
 const Register = () => {
   const navigate = useNavigate();
+  const [imageSize, setImageSize] = useState(0);
   const [formData, setFormData] = useState({
     username: "",
     lastname: "",
@@ -12,14 +13,18 @@ const Register = () => {
     profilePicture: null,
   });
 
+  useEffect(() => {
+    let data = JSON.parse(localStorage.getItem("Users"));
+    if (data) {
+      navigate("/login");
+    } else {
+      navigate("/");
+    }
+  }, []);
+
   const [errors, setErrors] = useState(false);
   const [show, setShow] = useState(false);
   const [register, setRegister] = useState(false);
-
-  const existingUsers = JSON.parse(localStorage.getItem("Users")) || [];
-
-  const map = existingUsers.map((data) => data.email);
-  const filteredEmails = map.includes(formData.email);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -39,14 +44,11 @@ const Register = () => {
       return;
     }
 
-    if (filteredEmails) {
-      return;
-    }
     setRegister(true);
 
     setTimeout(() => {
-      existingUsers.push(formData);
-      localStorage.setItem("Users", JSON.stringify(existingUsers));
+      // existingUsers.push(formData);
+      localStorage.setItem("Users", JSON.stringify(formData));
 
       setFormData({
         username: "",
@@ -77,7 +79,7 @@ const Register = () => {
           </p>
           <div className="mb-4">
             <input
-              autoComplete="false"
+              autoComplete="off"
               name="username"
               type="text"
               placeholder="Firstname"
@@ -88,11 +90,12 @@ const Register = () => {
               className="w-full py-3 px-8 bg-[rgba(244,248,247,1)] rounded-4xl focus:outline-black"
             />
             {formData.username === "" && errors && (
-              <p className="text-red-500 text-sm mt-1">This is required</p>
+              <p className="text-red-500 text-sm mt-1">UserName is required</p>
             )}
           </div>
           <div className="mb-4">
             <input
+              autoComplete="off"
               name="lastname"
               type="text"
               placeholder="Lastname"
@@ -103,13 +106,13 @@ const Register = () => {
               className="w-full py-3 px-8 bg-[rgba(244,248,247,1)] rounded-4xl focus:outline-black"
             />
             {formData.lastname === "" && errors && (
-              <p className="text-red-500 text-sm mt-1">This is required</p>
+              <p className="text-red-500 text-sm mt-1">LastName is required</p>
             )}
           </div>
           <div className="mb-4">
             <input
               name="email"
-              autoComplete="false"
+              autoComplete="off"
               type="email"
               placeholder="Email"
               value={formData.email}
@@ -118,20 +121,23 @@ const Register = () => {
               }
               className="w-full py-3 px-8 bg-[rgba(244,248,247,1)] rounded-4xl focus:outline-black"
             />
-            {(formData.email === "" && errors && (
-              <p className="text-red-500 text-sm mt-1">This is required</p>
-            )) ||
-              (errors && filteredEmails && (
-                <p className="text-sm mt-1 text-red-500">
-                  Email already exists
-                </p>
-              ))}
+            {
+              formData.email === "" && errors && (
+                <p className="text-red-500 text-sm mt-1">Email is required</p>
+              )
+              // ||
+              //   (errors && filteredEmails && (
+              //     <p className="text-sm mt-1 text-red-500">
+              //       Email already exists
+              //     </p>
+              //   ))
+            }
           </div>
           <div className="mb-4 relative">
             <input
               name="password"
               type={show ? "text" : "password"}
-              autoComplete="false"
+              autoComplete="off"
               placeholder="Password"
               value={formData.password}
               onChange={(e) =>
@@ -140,7 +146,7 @@ const Register = () => {
               className="w-full py-3 px-8 bg-[rgba(244,248,247,1)] rounded-4xl focus:outline-black"
             />
             {formData.password === "" && errors && (
-              <p className="text-red-500 text-sm mt-1">This is required</p>
+              <p className="text-red-500 text-sm mt-1">Password is required</p>
             )}
             <span
               onClick={() => {
@@ -155,7 +161,7 @@ const Register = () => {
             <input
               name="confirmPassword"
               type={show ? "text" : "password"}
-              autoComplete="false"
+              autoComplete="off"
               placeholder="Confirm Password"
               value={formData.confirmPassword}
               onChange={(e) =>
@@ -167,7 +173,9 @@ const Register = () => {
               className="w-full py-3 px-8 bg-[rgba(244,248,247,1)] rounded-4xl focus:outline-black"
             />
             {(formData.confirmPassword === "" && errors && (
-              <p className="text-red-500 text-sm mt-1">This is required</p>
+              <p className="text-red-500 text-sm mt-1">
+                Confirm Password is required
+              </p>
             )) ||
               (formData.password !== formData.confirmPassword && errors && (
                 <p className="text-sm text-red-500 mt-1">Password Mismatch</p>
@@ -185,9 +193,23 @@ const Register = () => {
               //     profilePicture: Image,
               //   }));
               // }}
+              accept=".png ,.jpg ,.jpeg"
               onChange={(e) => {
                 const file = e.target.files[0];
                 if (!file) return;
+                const SizeInMb = file.size / 1024 / 1024;
+                setImageSize(SizeInMb);
+
+                if (SizeInMb > 2) {
+                  alert("Image size is greater than 2 mb");
+                  setFormData({
+                    ...formData,
+                    profilePicture: null,
+                  });
+                  e.target.value = "";
+                  return;
+                }
+
                 const reader = new FileReader();
                 reader.onloadend = () => {
                   setFormData((prev) => ({
@@ -195,19 +217,24 @@ const Register = () => {
                     profilePicture: reader.result,
                   }));
                 };
-
                 reader.readAsDataURL(file);
               }}
               className="w-full p-3 border rounded-lg"
             />
             {formData.profilePicture === null && errors && (
-              <p className="text-red-500 text-sm mt-1">This is required</p>
+              <p className="text-red-500 text-sm mt-1"> is required</p>
             )}
             <img
               className="w-1/2 block m-auto h-30 object-cover rounded-lg"
               src={formData.profilePicture}
               alt=""
             />
+            <div className="flex justify-between my-1">
+              <span>Max Image Size Allowed:2MB</span>
+              {formData.profilePicture && (
+                <span>{imageSize && imageSize.toFixed(2) + "MB"}</span>
+              )}
+            </div>
           </div>
 
           <button

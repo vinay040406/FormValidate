@@ -1,27 +1,33 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
 const Login = () => {
   const navigate = useNavigate();
+  const [login, setLogin] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [errors, setErrors] = useState(false);
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
-  const [login, setLogin] = useState(false);
+  useEffect(() => {
+    let data = JSON.parse(localStorage.getItem("Users"));
+    if (!data) {
+      navigate("/");
+    }
+  }, []);
 
   const data = JSON.parse(localStorage.getItem("Users"));
-  const user = data?.find(
-    (u) => u.email === formData.email && u.password === formData.password,
-  );
-
-  const [showPassword, setShowPassword] = useState(false);
-  const [errors, setErrors] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setErrors(true);
-    if (!user) {
+    if (!data) {
+      return;
+    }
+    if (formData.email !== data.email || formData.password !== data.password) {
       return;
     }
     setLogin(true);
@@ -50,7 +56,7 @@ const Login = () => {
                 <input
                   name="email"
                   type="email"
-                  autoComplete="false"
+                  autoComplete="off"
                   placeholder="Email address"
                   value={formData.email}
                   onChange={(e) =>
@@ -61,17 +67,16 @@ const Login = () => {
                 {formData.email === "" && errors && (
                   <p className="text-red-500 text-sm mt-1">This is required</p>
                 )}
-                {formData.email !== data[0].email &&
-                  errors &&
-                  formData.email && (
-                    <p className="text-red-500 text-sm mt-1">
-                      Email do not match
-                    </p>
-                  )}
+                {formData.email !== data.email && errors && formData.email && (
+                  <p className="text-red-500 text-sm mt-1">
+                    Email do not match
+                  </p>
+                )}
               </div>
 
               <div className="relative">
                 <input
+                  autoComplete="off"
                   type={showPassword ? "text" : "password"}
                   placeholder="Password"
                   value={formData.password}
@@ -93,7 +98,7 @@ const Login = () => {
                 {formData.password === "" && errors && (
                   <p className="text-red-500 text-sm mt-1">This is required</p>
                 )}
-                {formData.password !== data[0].password &&
+                {formData.password !== data.password &&
                   errors &&
                   formData.password && (
                     <p className="text-red-500 text-sm mt-1">
@@ -133,7 +138,6 @@ const Login = () => {
           <h1 className="text-7xl font-medium mb-10">Please register first </h1>
 
           <Link to={"/"}>
-            {" "}
             <span className="underline text-xl font-bold">SignUp Here</span>
           </Link>
         </div>

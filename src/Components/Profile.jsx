@@ -3,21 +3,20 @@ import { useNavigate, Link } from "react-router-dom";
 // import { setItem } from "./Register";
 
 const Profile = () => {
-  const inputRef = useRef();
   const navigate = useNavigate();
   const logBtnRef = useRef();
-  const [profileDetails, setProfileDetails] = useState({
-    username: "",
-    profilePicture: null,
-    lastname: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
 
-  const data = JSON.parse(localStorage.getItem("Users"));
-  const existingUsers = JSON.parse(localStorage.getItem("Users")) || [];
-  const lastOne = existingUsers[existingUsers.length - 1];
+  useEffect(() => {
+    const data = JSON.parse(localStorage.getItem("Users"));
+    if (data) {
+      navigate("/profile");
+    } else {
+      navigate("/");
+    }
+  }, []);
+
+  const data = JSON.parse(localStorage.getItem("Users")) || [];
+
   const handleLogOut = () => {
     setTimeout(() => {
       localStorage.removeItem("Users");
@@ -25,25 +24,10 @@ const Profile = () => {
     }, 1000);
   };
 
-  useEffect(() => {
-    if (!data) return;
-    setProfileDetails(() => ({
-      username: lastOne.username,
-      profilePicture: lastOne.profilePicture,
-      lastname: lastOne.lastname,
-      email: lastOne.email,
-      password: lastOne.password,
-      confirmPassword: lastOne.confirmPassword,
-    }));
-  }, []);
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(profileDetails);
   };
 
-  const handleInputRef = () => {
-    inputRef.current.readOnly = false;
-  };
   return (
     <div className="h-screen w-screen bg-linear-to-br  flex items-center justify-center">
       {data ? (
@@ -175,7 +159,6 @@ const Profile = () => {
             </div>
             <div className="flex gap-5 mt-23 items-center justify-center">
               <svg
-                onClick={handleInputRef}
                 width="45"
                 height="45"
                 viewBox="0 0 45 45"
@@ -204,7 +187,7 @@ const Profile = () => {
               <h2 className="font-semibold text-[45px]">Edit profile</h2>
               <img
                 className="h-40 w-40 rounded-full object-cover bg-red-50"
-                src={profileDetails.profilePicture}
+                src={data.profilePicture}
                 alt=""
               />
             </div>
@@ -217,7 +200,6 @@ const Profile = () => {
                   <label className="flex flex-col gap-2 w-full">
                     First Name
                     <input
-                      ref={inputRef}
                       autoComplete="false"
                       name="username"
                       readOnly
@@ -228,7 +210,7 @@ const Profile = () => {
                         });
                       }}
                       type="text"
-                      value={profileDetails.username}
+                      value={data.username}
                       className="border-2 border-[rgba(133,133,133,1)] rounded-xl p-3 focus:outline-black"
                     />
                   </label>
@@ -241,7 +223,7 @@ const Profile = () => {
                       readOnly
                       type="text"
                       onChange={() => {}}
-                      value={profileDetails.lastname}
+                      value={data.lastname}
                       className=" border-2 border-[rgba(133,133,133,1)] rounded-xl p-3 focus:outline-black"
                     />
                   </label>
@@ -256,7 +238,7 @@ const Profile = () => {
                     readOnly
                     type="text"
                     onChange={() => {}}
-                    value={profileDetails.email}
+                    value={data.email}
                     className=" border-2 border-[rgba(133,133,133,1)] rounded-xl p-3 w-full focus:outline-black"
                   />
                 </label>
@@ -269,7 +251,7 @@ const Profile = () => {
                     readOnly
                     type="text"
                     onChange={() => {}}
-                    value={profileDetails.password}
+                    value={data.password}
                     className=" border-2 border-[rgba(133,133,133,1)] rounded-xl p-3 focus:outline-black"
                   />
                 </label>
@@ -282,7 +264,7 @@ const Profile = () => {
                     readOnly
                     type="text"
                     onChange={() => {}}
-                    value={profileDetails.confirmPassword}
+                    value={data.confirmPassword}
                     className=" border-2 border-[rgba(133,133,133,1)] rounded-xl p-3 focus:outline-black"
                   />
                 </label>
@@ -316,12 +298,12 @@ const Profile = () => {
                   logBtnRef.current.style.display = "block";
                 }}
                 className="h-10 w-10 rounded-full  cursor-pointer"
-                src={profileDetails.profilePicture}
+                src={data.profilePicture}
                 alt=""
               />
               <span className="ml-5 font-bold ">
-                {profileDetails.username.charAt(0).toUpperCase() +
-                  profileDetails.lastname.charAt(0).toUpperCase()}
+                {data.username.charAt(0).toUpperCase() +
+                  data.lastname.charAt(0).toUpperCase()}
               </span>
             </div>
 
